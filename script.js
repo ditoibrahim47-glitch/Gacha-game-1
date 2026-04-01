@@ -118,6 +118,14 @@ const fusionResultContainer = document.getElementById('fusion-result-container')
 const fusionResultCard = document.getElementById('fusion-result-card');
 const fusionDoneBtn = document.getElementById('fusion-done-btn');
 
+// Audio & Start Menu Elements
+const startMenu = document.getElementById('start-menu');
+const startGameBtn = document.getElementById('start-game-btn');
+const bgm = document.getElementById('bgm');
+const bgmVolume = document.getElementById('bgm-volume');
+const volumeIcon = document.getElementById('volume-icon');
+let activeVolume = 0.5;
+
 function updateBonanza() {
     bonanzaCountEl.textContent = bonanzaCount;
     const pct = (bonanzaCount / MAX_BONANZA) * 100;
@@ -189,6 +197,7 @@ function doSinglePull() {
     updateStats();
 
     setButtonsState(true);
+    if (!bgm.paused) bgm.volume = activeVolume * 0.3;
     
     // Reset Card
     pullCard.classList.remove('flipped');
@@ -227,6 +236,7 @@ function doSinglePull() {
         showcaseGlow.style.background = `radial-gradient(circle, ${rarityColors[pulledItem.rarity]} 0%, transparent 60%)`;
         
         addToInventory(pulledItem);
+        if (!bgm.paused) bgm.volume = activeVolume;
 
         setTimeout(() => setButtonsState(false), 500);
 
@@ -239,6 +249,7 @@ function doMultiPull() {
     currency -= 1000;
     updateStats();
     setButtonsState(true);
+    if (!bgm.paused) bgm.volume = activeVolume * 0.3;
 
     // Get 10 items
     const results = [];
@@ -285,6 +296,9 @@ function doMultiPull() {
         }, 150 * (index + 1));
     });
 
+    setTimeout(() => {
+        if (!bgm.paused) bgm.volume = activeVolume;
+    }, 150 * 10 + 300);
 }
 
 // Utils
@@ -305,6 +319,29 @@ function closeMulti() {
 pull1Btn.addEventListener('click', doSinglePull);
 pull10Btn.addEventListener('click', doMultiPull);
 closeMultiBtn.addEventListener('click', closeMulti);
+
+// Audio & Start Menu Events
+startGameBtn.addEventListener('click', () => {
+    startMenu.classList.add('hidden');
+    bgm.volume = activeVolume;
+    bgm.play().catch(e => console.warn("Audio play blocked", e));
+});
+
+bgmVolume.addEventListener('input', (e) => {
+    activeVolume = e.target.value;
+    bgm.volume = activeVolume;
+    if (activeVolume == 0) volumeIcon.textContent = '🔈';
+    else if (activeVolume < 0.5) volumeIcon.textContent = '🔉';
+    else volumeIcon.textContent = '🔊';
+});
+
+volumeIcon.addEventListener('click', () => {
+    if (bgm.paused) {
+        bgm.play();
+    } else {
+        bgm.pause();
+    }
+});
 
 // Synthesis Logic -----------------------------
 

@@ -12,13 +12,30 @@
 </head>
 
 <body>
+    <!-- Background Music -->
+    <audio id="bgm" src="asset/audio/super_mambo.mp3" loop></audio>
+
+    <!-- Start Menu Overlay -->
+    <div class="start-menu-overlay" id="start-menu">
+        <div class="start-menu-content">
+            <img src="asset/Images/mambo_menu.png" alt="Mambo Cover" class="cover-image">
+            <button class="btn btn-start" id="start-game-btn">START GAME</button>
+        </div>
+    </div>
+
     <div id="particle-container"></div>
 
     <header>
         <h1>Stellar Pull <span>Gacha Event</span></h1>
-        <div class="currency-display">
-            <span class="currency-icon">✦</span>
-            <span id="gem-count">10000</span>
+        <div class="header-right">
+            <div class="volume-control">
+                <span id="volume-icon">🔊</span>
+                <input type="range" id="bgm-volume" min="0" max="1" step="0.01" value="0.5">
+            </div>
+            <div class="currency-display">
+                <span class="currency-icon">✦</span>
+                <span id="gem-count">10000</span>
+            </div>
         </div>
     </header>
 
@@ -45,7 +62,8 @@
             <div class="bonanza-bar">
                 <div class="bonanza-fill" id="bonanza-fill"></div>
             </div>
-            <div class="bonanza-desc">Guaranteed <span style="color:var(--god); font-weight:bold;">God</span> Item upon reaching 50!</div>
+            <div class="bonanza-desc">Guaranteed <span style="color:var(--god); font-weight:bold;">God</span> Item upon
+                reaching 50!</div>
         </div>
 
         <div class="action-panel">
