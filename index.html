@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stellar Pull | Premium Gacha Simulator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=3">
 </head>
+
 <body>
     <div id="particle-container"></div>
-    
+
     <header>
         <h1>Stellar Pull <span>Gacha Event</span></h1>
         <div class="currency-display">
             <span class="currency-icon">✦</span>
-            <span id="gem-count">10000</span>
+            <span id="gem-count">1000</span>
         </div>
     </header>
 
     <main class="gacha-container">
-        
+
         <div class="showcase">
             <div class="showcase-glow" id="showcase-glow"></div>
             <div class="item-card current-pull" id="pull-card">
@@ -76,7 +80,7 @@
         <div class="synthesis-container">
             <h2>Item Synthesis</h2>
             <p class="synthesis-desc">Select 2 items of the same rarity from your inventory.</p>
-            
+
             <div class="synthesis-slots">
                 <div class="syn-slot" id="slot-1">
                     <div class="slot-placeholder">+</div>
@@ -92,7 +96,7 @@
                 <button class="btn btn-fuse" id="fuse-btn" disabled>Fuse Items</button>
             </div>
         </div>
-        
+
         <!-- Fusion Result Animation Modal (Inner Overlay) -->
         <div class="fusion-flash" id="fusion-flash"></div>
         <div class="fusion-result-container" id="fusion-result-container">
@@ -120,4 +124,5 @@
 
     <script src="script.js?v=3"></script>
 </body>
+
 </html>
