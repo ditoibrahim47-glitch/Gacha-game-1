@@ -40,6 +40,14 @@
             </div>
         </div>
 
+        <div class="bonanza-panel">
+            <div class="bonanza-text">Bonanza Pity: <span id="bonanza-count">0</span> / 50</div>
+            <div class="bonanza-bar">
+                <div class="bonanza-fill" id="bonanza-fill"></div>
+            </div>
+            <div class="bonanza-desc">Guaranteed <span style="color:var(--god); font-weight:bold;">God</span> Item upon reaching 50!</div>
+        </div>
+
         <div class="action-panel">
             <button class="btn btn-pull" id="pull-btn">
                 Pull 1x <span class="cost">(100 ✦)</span>
@@ -55,6 +63,7 @@
         <div class="inventory-header">
             <h2>Inventory</h2>
             <div class="header-actions">
+                <button class="btn btn-sm btn-sell" id="open-sell-btn">💰 Sell</button>
                 <button class="btn btn-sm btn-combine" id="open-combine-btn">⚙️ Combine</button>
                 <div class="stats">
                     Spins: <span id="spin-count">0</span>
@@ -111,7 +120,10 @@
     <!-- Inventory Picker Modal -->
     <div class="picker-overlay" id="picker-overlay">
         <div class="picker-container">
-            <h3>Pilih Item / Select Item</h3>
+            <h3 id="picker-title">Pilih Item / Select Item</h3>
+            <div id="sell-info" class="sell-info" style="display: none;">
+                Total Jual: <span id="sell-value" class="currency-icon">0 ✦</span>
+            </div>
             <div class="picker-grid" id="picker-grid">
                 <!-- Items injected here -->
             </div>

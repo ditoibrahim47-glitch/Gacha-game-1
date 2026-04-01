@@ -465,7 +465,7 @@ h1 span {
     }
 }
 
-/* Synthesis Feature Styles */
+/* Synthesis and Sell Feature Styles */
 .header-actions {
     display: flex;
     align-items: center;
@@ -475,6 +475,16 @@ h1 span {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
 }
+
+.btn-sell {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(0, 150, 136, 0.2));
+    border-color: rgba(76, 175, 80, 0.4);
+}
+.btn-sell:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.4), rgba(0, 150, 136, 0.4));
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
 .btn-combine {
     background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,82,82,0.2));
     border-color: rgba(255,215,0,0.4);
@@ -482,6 +492,53 @@ h1 span {
 .btn-combine:hover {
     background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,82,82,0.4));
     box-shadow: 0 0 15px rgba(255,215,0,0.3);
+}
+
+/* Bonanza Panel */
+.bonanza-panel {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--card-border);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    width: 320px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+.bonanza-text {
+    font-family: 'Outfit';
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+.bonanza-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+.bonanza-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--epic), var(--god));
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 10px var(--god);
+}
+.bonanza-desc {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.sell-info {
+    text-align: center;
+    font-family: 'Outfit';
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--god);
+    font-weight: bold;
 }
 
 .synthesis-overlay {

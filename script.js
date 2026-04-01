@@ -67,7 +67,22 @@ let currency = 10000;
 let spinsCount = 0;
 let inventory = [];
 
-// Synthesis State
+// Bonanza State
+let bonanzaCount = 0;
+const MAX_BONANZA = 50;
+const bonanzaCountEl = document.getElementById('bonanza-count');
+const bonanzaFillEl = document.getElementById('bonanza-fill');
+
+// Synthesis & Sell State
+let pickerMode = 'combine'; // 'combine' or 'sell'
+const sellRates = {
+    Common: 50,
+    Rare: 200,
+    Epic: 500,
+    Legend: 1500,
+    Myth: 5000,
+    God: 50000
+};
 let isCombineMode = false;
 let selectedForCombine = [];
 
@@ -103,8 +118,20 @@ const fusionResultContainer = document.getElementById('fusion-result-container')
 const fusionResultCard = document.getElementById('fusion-result-card');
 const fusionDoneBtn = document.getElementById('fusion-done-btn');
 
+function updateBonanza() {
+    bonanzaCountEl.textContent = bonanzaCount;
+    const pct = (bonanzaCount / MAX_BONANZA) * 100;
+    bonanzaFillEl.style.width = pct + '%';
+}
+
 // System Logic
-function getRandomItem() {
+function getRandomItem(isGuaranteedGod = false) {
+    if (isGuaranteedGod) {
+        const itemPool = items['God'];
+        const pickedItem = itemPool[Math.floor(Math.random() * itemPool.length)];
+        return { ...pickedItem, rarity: 'God', id: Date.now() + Math.random().toString(36).substr(2, 9) };
+    }
+
     let rand = Math.random() * 100;
     let cumulative = 0;
     let pulledRarity = 'Common';
@@ -171,7 +198,16 @@ function doSinglePull() {
 
     setTimeout(() => {
         pullCard.classList.remove('shake');
-        const pulledItem = getRandomItem();
+
+        bonanzaCount++;
+        let isGuaranteed = false;
+        if (bonanzaCount >= MAX_BONANZA) {
+            isGuaranteed = true;
+            bonanzaCount = 0;
+        }
+        updateBonanza();
+
+        const pulledItem = getRandomItem(isGuaranteed);
         
         // Setup Result Card Content
         resultRarity.textContent = pulledItem.rarity;
@@ -207,7 +243,15 @@ function doMultiPull() {
     // Get 10 items
     const results = [];
     for(let i=0; i<10; i++) {
-        const item = getRandomItem();
+        bonanzaCount++;
+        let isGuaranteed = false;
+        if (bonanzaCount >= MAX_BONANZA) {
+            isGuaranteed = true;
+            bonanzaCount = 0;
+        }
+        updateBonanza();
+
+        const item = getRandomItem(isGuaranteed);
         results.push(item);
         addToInventory(item);
     }
@@ -265,10 +309,14 @@ closeMultiBtn.addEventListener('click', closeMulti);
 // Synthesis Logic -----------------------------
 
 // Picker Elements
+const openSellBtn = document.getElementById('open-sell-btn');
 const pickerOverlay = document.getElementById('picker-overlay');
 const pickerGrid = document.getElementById('picker-grid');
 const closePickerBtn = document.getElementById('close-picker-btn');
 const confirmPickBtn = document.getElementById('confirm-pick-btn');
+const pickerTitle = document.getElementById('picker-title');
+const sellInfoEl = document.getElementById('sell-info');
+const sellValueEl = document.getElementById('sell-value');
 
 // Pagination Elements
 const prevPageBtn = document.getElementById('prev-page-btn');
@@ -289,10 +337,30 @@ function toggleCombineMode(state) {
     }
 }
 
-function openPicker() {
+function openPicker(mode = 'combine') {
+    pickerMode = mode;
     pickerOverlay.classList.add('active');
     currentPickerPage = 1;
+
+    if (pickerMode === 'sell') {
+        selectedForCombine = [];
+        pickerTitle.textContent = "Pilih Item untuk Dijual";
+        sellInfoEl.style.display = 'block';
+        confirmPickBtn.textContent = 'Jual Item';
+        updateSellValue();
+    } else {
+        pickerTitle.textContent = "Pilih Item / Select Item";
+        sellInfoEl.style.display = 'none';
+        confirmPickBtn.textContent = 'Selesai Memilih';
+    }
+
     renderPickerGrid();
+}
+
+function updateSellValue() {
+    if(pickerMode !== 'sell') return;
+    const total = selectedForCombine.reduce((acc, item) => acc + sellRates[item.rarity], 0);
+    sellValueEl.textContent = total + " ✦";
 }
 
 function closePicker() {
@@ -341,11 +409,16 @@ function renderPickerGrid() {
                 // Deselect
                 selectedForCombine.splice(existingIndex, 1);
             } else {
-                // Select (Max 2, must be same rarity)
-                if (selectedForCombine.length >= 2) return;
-                if (selectedForCombine.length === 1 && selectedForCombine[0].rarity !== item.rarity) return;
-                selectedForCombine.push(item);
+                if (pickerMode === 'combine') {
+                    // Select (Max 2, must be same rarity)
+                    if (selectedForCombine.length >= 2) return;
+                    if (selectedForCombine.length === 1 && selectedForCombine[0].rarity !== item.rarity) return;
+                    selectedForCombine.push(item);
+                } else if (pickerMode === 'sell') {
+                    selectedForCombine.push(item);
+                }
             }
+            if(pickerMode === 'sell') updateSellValue();
             renderPickerGrid(); // Re-render to update states
         });
         
@@ -354,7 +427,7 @@ function renderPickerGrid() {
             uiItem.style.borderColor = `var(--i-color)`;
             uiItem.style.boxShadow = `inset 0 0 15px rgba(255,255,255,0.2), 0 0 10px var(--i-color)`;
             uiItem.style.transform = `scale(0.95)`;
-        } else if (selectedForCombine.length > 0 && selectedForCombine[0].rarity !== item.rarity) {
+        } else if (pickerMode === 'combine' && selectedForCombine.length > 0 && selectedForCombine[0].rarity !== item.rarity) {
             uiItem.style.opacity = '0.3';
             uiItem.style.pointerEvents = 'none';
         }
@@ -380,8 +453,23 @@ nextPageBtn.addEventListener('click', () => {
 });
 
 function confirmPicker() {
-    closePicker();
-    updateSynthesisUI();
+    if (pickerMode === 'sell') {
+        if(selectedForCombine.length === 0) return closePicker();
+        
+        const totalValue = selectedForCombine.reduce((acc, item) => acc + sellRates[item.rarity], 0);
+        currency += totalValue;
+        
+        const soldIds = selectedForCombine.map(i => i.id);
+        inventory = inventory.filter(i => !soldIds.includes(i.id));
+        
+        updateStats();
+        renderInventory();
+        selectedForCombine = [];
+        closePicker();
+    } else {
+        closePicker();
+        updateSynthesisUI();
+    }
 }
 
 function updateSynthesisUI() {
@@ -488,8 +576,9 @@ fuseBtn.addEventListener('click', executeFusion);
 fusionDoneBtn.addEventListener('click', closeFusionResult);
 
 // Open picker on slot click
-slot1.addEventListener('click', openPicker);
-slot2.addEventListener('click', openPicker);
+slot1.addEventListener('click', () => openPicker('combine'));
+slot2.addEventListener('click', () => openPicker('combine'));
+openSellBtn.addEventListener('click', () => openPicker('sell'));
 
 // Picker actions
 closePickerBtn.addEventListener('click', closePicker);
