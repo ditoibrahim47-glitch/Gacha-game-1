@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Pull | Premium Gacha Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+    <div id="particle-container"></div>
+    
+    <header>
+        <h1>Stellar Pull <span>Gacha Event</span></h1>
+        <div class="currency-display">
+            <span class="currency-icon">✦</span>
+            <span id="gem-count">10000</span>
+        </div>
+    </header>
+
+    <main class="gacha-container">
+        
+        <div class="showcase">
+            <div class="showcase-glow" id="showcase-glow"></div>
+            <div class="item-card current-pull" id="pull-card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="mystery-box">?</div>
+                    </div>
+                    <div class="card-back" id="result-card">
+                        <div class="rarity-badge" id="result-rarity">Epic</div>
+                        <div class="item-image" id="result-image">✨</div>
+                        <div class="item-name" id="result-name">Starfall Edge</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-panel">
+            <button class="btn btn-pull" id="pull-btn">
+                Pull 1x <span class="cost">(100 ✦)</span>
+            </button>
+            <button class="btn btn-pull-multi" id="pull-multi-btn">
+                Pull 10x <span class="cost">(1000 ✦)</span>
+            </button>
+        </div>
+
+    </main>
+
+    <aside class="inventory-section">
+        <div class="inventory-header">
+            <h2>Inventory</h2>
+            <div class="header-actions">
+                <button class="btn btn-sm btn-combine" id="open-combine-btn">⚙️ Combine</button>
+                <div class="stats">
+                    Spins: <span id="spin-count">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="inventory-grid" id="inventory-grid">
+            <!-- Inventory items will be injected here -->
+        </div>
+    </aside>
+
+    <!-- Overlay for multi-pulls -->
+    <div class="multi-pull-overlay" id="multi-pull-overlay">
+        <div class="multi-pull-container">
+            <h2>10x Pull Results</h2>
+            <div class="multi-pull-grid" id="multi-pull-grid"></div>
+            <button class="btn btn-close" id="close-multi-btn">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Overlay for Synthesis -->
+    <div class="synthesis-overlay" id="synthesis-overlay">
+        <div class="synthesis-container">
+            <h2>Item Synthesis</h2>
+            <p class="synthesis-desc">Select 2 items of the same rarity from your inventory.</p>
+            
+            <div class="synthesis-slots">
+                <div class="syn-slot" id="slot-1">
+                    <div class="slot-placeholder">+</div>
+                </div>
+                <div class="syn-plus">+</div>
+                <div class="syn-slot" id="slot-2">
+                    <div class="slot-placeholder">+</div>
+                </div>
+            </div>
+
+            <div class="synthesis-actions">
+                <button class="btn btn-close" id="close-combine-btn">Cancel</button>
+                <button class="btn btn-fuse" id="fuse-btn" disabled>Fuse Items</button>
+            </div>
+        </div>
+        
+        <!-- Fusion Result Animation Modal (Inner Overlay) -->
+        <div class="fusion-flash" id="fusion-flash"></div>
+        <div class="fusion-result-container" id="fusion-result-container">
+            <h3>Synthesis Complete!</h3>
+            <div class="item-card pulled-fusion" id="fusion-result-card">
+                <!-- Result injected here -->
+            </div>
+            <button class="btn btn-close mt-2" id="fusion-done-btn">Awesome!</button>
+        </div>
+    </div>
+
+    <!-- Inventory Picker Modal -->
+    <div class="picker-overlay" id="picker-overlay">
+        <div class="picker-container">
+            <h3>Pilih Item / Select Item</h3>
+            <div class="picker-grid" id="picker-grid">
+                <!-- Items injected here -->
+            </div>
+            <div class="picker-actions">
+                <button class="btn btn-close" id="close-picker-btn">Batal / Cancel</button>
+                <button class="btn btn-fuse" id="confirm-pick-btn">Selesai Memilih</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
