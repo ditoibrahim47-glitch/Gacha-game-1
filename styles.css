@@ -785,3 +785,35 @@ h1 span {
     padding-top: 1.5rem;
     border-top: 1px solid var(--card-border);
 }
+
+.picker-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.btn-page {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.btn-page:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-page:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.page-indicator {
+    font-family: 'Outfit';
+    font-weight: 600;
+    font-size: 1.1rem;
+}

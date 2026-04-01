@@ -270,6 +270,14 @@ const pickerGrid = document.getElementById('picker-grid');
 const closePickerBtn = document.getElementById('close-picker-btn');
 const confirmPickBtn = document.getElementById('confirm-pick-btn');
 
+// Pagination Elements
+const prevPageBtn = document.getElementById('prev-page-btn');
+const nextPageBtn = document.getElementById('next-page-btn');
+const pageIndicator = document.getElementById('page-indicator');
+
+let currentPickerPage = 1;
+const ITEMS_PER_PAGE = 20;
+
 function toggleCombineMode(state) {
     if (state) {
         synthesisOverlay.classList.add('active');
@@ -283,6 +291,7 @@ function toggleCombineMode(state) {
 
 function openPicker() {
     pickerOverlay.classList.add('active');
+    currentPickerPage = 1;
     renderPickerGrid();
 }
 
@@ -293,8 +302,26 @@ function closePicker() {
 function renderPickerGrid() {
     pickerGrid.innerHTML = '';
     
-    // Sort logic: newest first
-    [...inventory].reverse().forEach(item => {
+    // Setup Pagination Variables
+    const totalItems = inventory.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+    
+    // Clamp current page just in case
+    if(currentPickerPage > totalPages) currentPickerPage = totalPages;
+    if(currentPickerPage < 1) currentPickerPage = 1;
+    
+    const startIndex = (currentPickerPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    // Update UI controls
+    pageIndicator.textContent = `Page ${currentPickerPage} / ${totalPages}`;
+    prevPageBtn.disabled = currentPickerPage === 1;
+    nextPageBtn.disabled = currentPickerPage === totalPages;
+    
+    // Sort logic: newest first and slice for pagination
+    const visibleItems = [...inventory].reverse().slice(startIndex, endIndex);
+
+    visibleItems.forEach(item => {
         const uiItem = document.createElement('div');
         uiItem.className = 'inventory-item select-mode';
         uiItem.dataset.id = item.id;
@@ -335,6 +362,22 @@ function renderPickerGrid() {
         pickerGrid.appendChild(uiItem);
     });
 }
+
+// Pagination Controls Map
+prevPageBtn.addEventListener('click', () => {
+    if (currentPickerPage > 1) {
+        currentPickerPage--;
+        renderPickerGrid();
+    }
+});
+
+nextPageBtn.addEventListener('click', () => {
+    const totalPages = Math.max(1, Math.ceil(inventory.length / ITEMS_PER_PAGE));
+    if (currentPickerPage < totalPages) {
+        currentPickerPage++;
+        renderPickerGrid();
+    }
+});
 
 function confirmPicker() {
     closePicker();
