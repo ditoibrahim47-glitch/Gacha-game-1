@@ -375,6 +375,7 @@ function executeFusion() {
 
     // Calculate Result
     let resultRarity = baseRarity;
+    let isUpgrade = false;
     
     // If not God, 5% chance to upgrade
     if (baseRarity !== 'God') {
@@ -382,6 +383,7 @@ function executeFusion() {
         if (upgradeRoll < 0.05) {
             const currentIdx = rarityOrder.indexOf(baseRarity);
             resultRarity = rarityOrder[currentIdx + 1];
+            isUpgrade = true;
         }
     }
 
@@ -399,6 +401,18 @@ function executeFusion() {
         // Show result modal
         fusionResultContainer.classList.add('show');
         
+        // Remove old glow if any
+        const oldGlow = fusionResultContainer.querySelector('.upgrade-rays-overlay');
+        if (oldGlow) oldGlow.remove();
+
+        if (isUpgrade) {
+            playUpgradeSound();
+            const glowEl = document.createElement('div');
+            glowEl.className = 'upgrade-rays-overlay';
+            glowEl.innerHTML = '<div class="upgrade-glow"></div>';
+            fusionResultContainer.insertBefore(glowEl, fusionResultContainer.firstChild);
+        }
+
         fusionResultCard.style.setProperty('--card-color', rarityColors[fusionResult.rarity]);
         if(fusionResult.rarity === 'God') {
             fusionResultCard.style.animation = `godPulse 2s infinite`;
@@ -475,6 +489,46 @@ function animateParticle(particle) {
         direction: 'alternate',
         easing: 'ease-in-out'
     });
+}
+
+function playUpgradeSound() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+
+    // Teng
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(523.25, ctx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.1);
+    
+    gain1.gain.setValueAtTime(0, ctx.currentTime);
+    gain1.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.05);
+    gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.5);
+
+    // Nett
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.2);
+    osc2.frequency.exponentialRampToValueAtTime(1567.98, ctx.currentTime + 0.3); // G6
+    
+    gain2.gain.setValueAtTime(0, ctx.currentTime + 0.2);
+    gain2.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.25);
+    gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+    
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    
+    osc2.start(ctx.currentTime + 0.2);
+    osc2.stop(ctx.currentTime + 0.8);
 }
 
 // Init
