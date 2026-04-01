@@ -431,22 +431,32 @@ h1 span {
 .rarity-Epic { --card-color: var(--epic); }
 .rarity-Legend { --card-color: var(--legend); }
 .rarity-Myth { --card-color: var(--myth); }
+@keyframes godPulse {
+    0% { filter: hue-rotate(0deg) brightness(1); box-shadow: 0 0 20px var(--god); }
+    50% { filter: hue-rotate(30deg) brightness(1.5); box-shadow: 0 0 50px var(--god), 0 0 100px var(--god); }
+    100% { filter: hue-rotate(0deg) brightness(1); box-shadow: 0 0 20px var(--god); }
+}
+
+@keyframes mythPulse {
+    0% { filter: brightness(1); box-shadow: 0 0 15px var(--myth); }
+    50% { filter: brightness(1.3); box-shadow: 0 0 40px var(--myth), 0 0 70px var(--myth); }
+    100% { filter: brightness(1); box-shadow: 0 0 15px var(--myth); }
+}
+
+.rarity-Myth { 
+    --card-color: var(--myth); 
+    animation: mythPulse 2.5s infinite ease-in-out;
+}
+
 .rarity-God { 
     --card-color: var(--god); 
-    animation: godPulse 3s infinite;
+    animation: godPulse 3s infinite ease-in-out;
 }
 
-.rarity-Myth .card-inner .card-back { border-color: var(--myth); box-shadow: 0 0 30px rgba(255, 82, 82, 0.4); }
+.rarity-Myth .card-inner .card-back { border-color: var(--myth); }
 .rarity-God .card-inner .card-back { 
     border-color: var(--god); 
-    box-shadow: 0 0 50px rgba(0, 229, 255, 0.6); 
     background: linear-gradient(135deg, #1a1c29, #0a1b2a);
-}
-
-@keyframes godPulse {
-    0% { filter: hue-rotate(0deg); }
-    50% { filter: hue-rotate(30deg) brightness(1.2); }
-    100% { filter: hue-rotate(0deg); }
 }
 
 /* Responsive */
@@ -827,8 +837,11 @@ h1 span {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 1rem;
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 10px;
     align-content: flex-start;
+    max-height: 450px; /* Limit height to encourage scrolling if needed */
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
 }
 
 .picker-grid::-webkit-scrollbar { width: 8px; }

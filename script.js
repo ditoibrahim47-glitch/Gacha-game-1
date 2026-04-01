@@ -324,7 +324,7 @@ const nextPageBtn = document.getElementById('next-page-btn');
 const pageIndicator = document.getElementById('page-indicator');
 
 let currentPickerPage = 1;
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 10;
 
 function toggleCombineMode(state) {
     if (state) {
